@@ -1,14 +1,32 @@
 import React from 'react';
-import {Form} from './Form/Form';
+import { Form } from './Form/Form';
 import { Contacts } from './Contacts/Contacts';
 import { Filter } from './Filter/Filter';
 import css from './App/App.module.css';
 
-export class App extends React.Component{
+export class App extends React.Component {
   state = {
     contacts: [],
     filter: '',
   };
+
+  // ============= componentDidMount==============
+  componentDidMount = () => {
+    const contacts = localStorage.getItem('contacts');
+    if (contacts) {
+      const parsedContacts = JSON.parse(contacts);
+      this.setState({ contacts: parsedContacts });
+    }
+  };
+
+  // ==============componentDidUpdate======================
+  componentDidUpdate = (_, prevState) => {
+    const updatedState = this.state.contacts;
+    if (updatedState !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(updatedState));
+    }
+  };
+
   // ========Додає контакти та виводить попередженняякщо наявний такий контакт=========
 
   onAddingContacts = newContact => {
@@ -35,8 +53,8 @@ export class App extends React.Component{
 
     this.setState({ contacts: updatedList });
   };
-  
-  render(){
+
+  render() {
     const { contacts, filter } = this.state;
     const { onAddingContacts, onFilterHandler, onDeleteHandler } = this;
 
@@ -54,6 +72,4 @@ export class App extends React.Component{
       </div>
     );
   }
-
 }
-
